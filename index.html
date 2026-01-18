@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <title>AYT Edebiyat</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      background: linear-gradient(135deg, #1e3a8a, #2563eb);
+      color: white;
+      text-align: center;
+    }
+
+    header {
+      padding: 25px;
+      font-size: 28px;
+      font-weight: bold;
+    }
+
+    .container {
+      padding: 20px;
+    }
+
+    button {
+      width: 90%;
+      max-width: 400px;
+      padding: 15px;
+      margin: 10px 0;
+      font-size: 18px;
+      border: none;
+      border-radius: 12px;
+      background-color: #ffffff;
+      color: #1e3a8a;
+      font-weight: bold;
+    }
+
+    button:active {
+      transform: scale(0.97);
+    }
+
+    .back {
+      background-color: #93c5fd;
+    }
+  </style>
+</head>
+
+<body>
+
+<header>AYT Edebiyat</header>
+
+<div class="container" id="app"></div>
+
+<script>
+const app = document.getElementById("app");
+
+function anaSayfa() {
+  app.innerHTML = `
+    <button onclick="donemler()">Edebî Dönemler</button>
+  `;
+}
+
+function donemler() {
+  app.innerHTML = `
+    <button onclick="sanatcilar()">Tanzimat Dönemi</button>
+    <button class="back" onclick="anaSayfa()">⬅ Geri</button>
+  `;
+}
+
+function sanatcilar() {
+  app.innerHTML = `
+    <button onclick="eserler()">Namık Kemal</button>
+    <button class="back" onclick="donemler()">⬅ Geri</button>
+  `;
+}
+
+function eserler() {
+  app.innerHTML = `
+    <p><b>Vatan Yahut Silistre</b></p>
+    <p><b>İntibah</b></p>
+    <p><b>Cezmi</b></p>
+    <button class="back" onclick="sanatcilar()">⬅ Geri</button>
+  `;
+}
+
+anaSayfa();
+</script>
+
+</body>
+  </html>
