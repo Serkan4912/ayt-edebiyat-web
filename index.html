@@ -4,8 +4,6 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>AYT Edebiyat</title>
-<link rel="manifest" href="manifest.json">
-
 <style>
 :root{
   --bg:#0b1220;
@@ -19,7 +17,6 @@ body{
   font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
   background:linear-gradient(180deg,#020617,#0b1220);
   color:var(--text);
-  overflow-x:hidden;
 }
 header{
   padding:22px;
@@ -30,42 +27,6 @@ header{
   background:linear-gradient(90deg,var(--accent),var(--accent2));
   color:#020617;
 }
-
-/* Splash */
-#splash{
-  position:fixed;
-  inset:0;
-  background:linear-gradient(135deg,var(--accent),var(--accent2));
-  display:flex;
-  flex-direction:column;
-  justify-content:center;
-  align-items:center;
-  color:#020617;
-  z-index:100;
-}
-#splash .logo{
-  font-size:44px;
-  font-weight:900;
-  letter-spacing:2px;
-  text-align:center;
-}
-#splash .logo span{
-  display:block;
-  font-size:18px;
-  font-weight:500;
-  letter-spacing:4px;
-  color:#020617;
-  margin-top:4px;
-  opacity:0.8;
-}
-#splash.fadeOut{
-  animation:fadeOut 0.8s forwards;
-}
-@keyframes fadeOut{
-  to{opacity:0; visibility:hidden;}
-}
-
-/* Container */
 .container{
   padding:18px;
   animation:fade .4s ease;
@@ -94,7 +55,7 @@ button{
   transition:.15s;
 }
 button:active{ transform:scale(.96); }
-.back{ background:#94a3b8 !important; }
+.back{ background:#94a3b8 !important; margin-bottom:16px; }
 h2{
   text-align:center;
   margin:10px 0 20px;
@@ -109,37 +70,9 @@ li{
   margin:10px 0;
   box-shadow: inset 0 0 0 1px #1e293b;
 }
-
-/* Search */
-.search-box{
-  width:100%;
-  max-width:360px;
-  margin:0 auto 16px;
-}
-.search-box input{
-  width:100%;
-  padding:14px 16px;
-  border-radius:14px;
-  border:none;
-  outline:none;
-  font-size:16px;
-  background:#020617;
-  color:#e5e7eb;
-  border:1px solid #1e293b;
-}
-.search-box input::placeholder{
-  color:#94a3b8;
-}
-
 </style>
 </head>
-
 <body>
-
-<!-- Splash -->
-<div id="splash">
-  <div class="logo">AYT<span>EDEBİYAT</span></div>
-</div>
 
 <header>AYT Edebiyat</header>
 <div class="container" id="app"></div>
@@ -189,87 +122,53 @@ let allData = {
   }
 };
 
-// Açılış ekranı
-setTimeout(()=>{
-  document.getElementById("splash").classList.add("fadeOut");
-  ana();
-},1200);
+function render(html){ app.innerHTML = html; }
 
-function render(html){
-  app.innerHTML = html;
-}
+function go(view){ stack.push(app.innerHTML); render(view); }
 
-function go(view){
-  stack.push(app.innerHTML);
-  render(view);
-}
-
-function back(){
-  if(stack.length) render(stack.pop());
-}
+function back(){ if(stack.length) render(stack.pop()); }
 
 function ana(){
   stack=[];
   render(`
-    <div class="search-box">
-      <input id="search" placeholder="Dönem, yazar veya eser ara..." oninput="ara()">
-    </div>
     <div class="card"><button onclick="gecis()">Geçiş Dönemi</button></div>
     <div class="card"><button onclick="divan()">Divan Edebiyatı</button></div>
     <div class="card"><button onclick="tanzimat()">Tanzimat Dönemi</button></div>
   `);
 }
 
-function gecis(){
-  go(renderYazar("Geçiş Dönemi"));
-}
-
-function divan(){
-  go(renderYazar("Divan Edebiyatı"));
-}
-
-function tanzimat(){
-  go(renderYazar("Tanzimat Dönemi"));
-}
+function gecis(){ go(renderYazar("Geçiş Dönemi")); }
+function divan(){ go(renderYazar("Divan Edebiyatı")); }
+function tanzimat(){ go(renderYazar("Tanzimat Dönemi")); }
 
 function renderYazar(donem){
-  let html = `<h2>${donem}</h2>`;
-  Object.keys(allData[donem]).forEach(yazar=>{
-    html+=`<div class="card"><button onclick="eser('${yazar}','${donem}')">${yazar}</button></div>`;
-  });
-  html+=`<div class="card"><button class="back" onclick="back()">⬅ Geri</button></div>`;
+  let html = `<div class="card"><button class="back" onclick="back()">⬅ Geri</button></div>`;
+  if(donem==="Tanzimat Dönemi"){
+    Object.keys(allData[donem]).forEach(d=>{
+      html+=`<h2 style="text-align:center;">${d}</h2>`;
+      Object.keys(allData[donem][d]).forEach(yazar=>{
+        html+=`<div class="card"><button onclick="eser('${yazar}','${donem}','${d}')">${yazar}</button></div>`;
+      });
+    });
+  } else {
+    Object.keys(allData[donem]).forEach(yazar=>{
+      html+=`<div class="card"><button onclick="eser('${yazar}','${donem}')">${yazar}</button></div>`;
+    });
+  }
   return html;
 }
 
-function eser(yazar, donem){
-  let liste = allData[donem][yazar];
+function eser(yazar, donem, altD=null){
+  let liste = altD ? allData[donem][altD][yazar] : allData[donem][yazar];
   let li = liste.map(e=>`<li>${e}</li>`).join("");
   go(`
+    <div class="card"><button class="back" onclick="back()">⬅ Geri</button></div>
     <h2>${yazar}</h2>
     <ul>${li}</ul>
-    <div class="card"><button class="back" onclick="back()">⬅ Geri</button></div>
   `);
 }
 
-// Arama fonksiyonu
-function ara(){
-  let val = document.getElementById("search").value.toLowerCase();
-  if(val==""){ render('<div class="search-box"><input id="search" placeholder="Dönem, yazar veya eser ara..." oninput="ara()"></div>'); return; }
-  let html = `<div class="card"><button class="back" onclick="ana()">⬅ Geri</button></div>`;
-  Object.keys(allData).forEach(donem=>{
-    Object.keys(allData[donem]).forEach(yazar=>{
-      if(yazar.toLowerCase().includes(val)){
-        html+=`<div class="card"><button onclick="eser('${yazar}','${donem}')">${yazar}</button></div>`;
-      }
-      allData[donem][yazar].forEach(eser=>{
-        if(eser.toLowerCase().includes(val)){
-          html+=`<div class="card"><button onclick="eser('${yazar}','${donem}')">${eser}</button></div>`;
-        }
-      });
-    });
-  });
-  render(html);
-}
+ana();
 </script>
 
 </body>
