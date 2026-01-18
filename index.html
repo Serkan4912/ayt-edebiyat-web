@@ -155,15 +155,37 @@ let allData = {
     "Hoca Ahmet Yesevî":["Divân-ı Hikmet"]
   },
   "Divan Edebiyatı":{
-    "Fuzûlî":["Leyla vü Mecnun","Beng ü Bade","Sakinâme","Rind ü Zahid","Şikâyetnâme"],
-    "Nâbî":["Hayriyye","Hayrâbâd","Surnâme"],
-    "Şeyh Galip":["Hüsn ü Aşk"],
-    "Ali Şir Nevâî":["Muhakemetü’l Lügateyn","Mecalisü’n Nefais"]
+    "Hoca Dehhânî":["Selçuklu Şehnâmesi"],
+    "Mevlânâ":["Divan-Kebir","Mesnevi","Fihi Mafih","Mektubat","Mecalis-i Seba"],
+    "Ahmet Faki":["Çarhname"],
+    "Şeyyad Hamza":["Yusuf u Züleyha"],
+    "Sultan Veled":["Divan","İbtidaname","Rebabapname","İntihaname"],
+    "Âşık Paşa":["Garipname"],
+    "Ahmedî":["İskendername","Cemşid ü Hurşid"],
+    "Gülşehrî":["Mantuku't Tayt","Felekname"],
+    "Ali Şir Nevâî":["Muhakemetü'l Lügateyn","Mecalisü'n Nefais"],
+    "Şeyhî":["Hüsrev ü Şirin","Harnâme"],
+    "Ahmed-i Dâî":["Çenknâme"],
+    "Fuzûli":["Leyla vü Mecnun","Beng ü Bade","Sakiname","Rind ü Zahid","Şikâyetnâme"],
+    "Taşlıcalı Yahyâ":["Yusuf u Züleyha","Şah u Geda"],
+    "Nâbî":["Hayriyye","Hayrabad","Surnâme"],
+    "Şeyh Gali":["Hüsn ü Aşk"]
   },
   "Tanzimat Dönemi":{
-    "Namık Kemal":["İntibah","Cezmi","Vatan Yahut Silistre","Gülnihal","Lisân-ı Osmânî"],
-    "Ahmet Mithat Efendi":["Hüseyin Fellâh","Esrâr-ı Cinâyât","Esâret","Letâif-i Rivayat","Felâtun Bey ile Râkım Efendi"],
-    "Şinasi":["Tercüman-ı Ahvâl","Tasvir-i Efkâr","Tercüme-i Manzume"]
+    "1. Dönem":{
+      "Şemsettin Sami":["Taaşuk-ı Talat ve Fitnat"],
+      "Ahmet Mithat Efendi":["Hüseyin Fellâh","Esrâr-ı Cinâyât","Esâret","Letâif-i Rivayat","Eflatun Bey ile Râkım Efendi"],
+      "Namık Kemal":["İntibah","Cezmi","Vatan Yahut Silistre","Gülnihal","Lisân-ı Osmânî"],
+      "Ziya Paşa":["Zafernâme","Harâbât","Defter-i Âmâl","Eş'ar-ı Ziya"],
+      "İbrahim Şinasi":["Tercüman-ı Ahval","Tercüman-ı Ahval Mukaddimesi","Tasvir-i Efkâr","Tercüme-i Manzume"]
+    },
+    "2. Dönem":{
+      "Sami Paşazade Sezai":["Küçük Şeyler","Sergüzeşt","Rumuzu'l-Edeb","İclâl"],
+      "Abdülhak Hamit Tarhan":["Sahra","Makber","Ölü","Bâlâdan Bir Ses","Validem"],
+      "Recaizade Mahmut Ekrem":["Araba Sevdası"],
+      "Muallim Naci":["Ateşpâre","Demdeme"],
+      "Nabizade Nazım":["Karabibik","Zehra","Yadigarlarım"]
+    }
   }
 };
 
@@ -232,7 +254,8 @@ function eser(yazar, donem){
 // Arama fonksiyonu
 function ara(){
   let val = document.getElementById("search").value.toLowerCase();
-  let html = "";
+  if(val==""){ render('<div class="search-box"><input id="search" placeholder="Dönem, yazar veya eser ara..." oninput="ara()"></div>'); return; }
+  let html = `<div class="card"><button class="back" onclick="ana()">⬅ Geri</button></div>`;
   Object.keys(allData).forEach(donem=>{
     Object.keys(allData[donem]).forEach(yazar=>{
       if(yazar.toLowerCase().includes(val)){
@@ -245,8 +268,7 @@ function ara(){
       });
     });
   });
-  if(val=="") ana();
-  else render(html);
+  render(html);
 }
 </script>
 
