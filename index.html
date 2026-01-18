@@ -2,8 +2,8 @@
 <html lang="tr">
 <head>
 <meta charset="UTF-8">
-<title>AYT Edebiyat</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AYT Edebiyat</title>
 <link rel="manifest" href="manifest.json">
 
 <style>
@@ -19,6 +19,7 @@ body{
   font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
   background:linear-gradient(180deg,#020617,#0b1220);
   color:var(--text);
+  overflow-x:hidden;
 }
 header{
   padding:22px;
@@ -29,6 +30,42 @@ header{
   background:linear-gradient(90deg,var(--accent),var(--accent2));
   color:#020617;
 }
+
+/* Splash */
+#splash{
+  position:fixed;
+  inset:0;
+  background:linear-gradient(135deg,var(--accent),var(--accent2));
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  align-items:center;
+  color:#020617;
+  z-index:100;
+}
+#splash .logo{
+  font-size:44px;
+  font-weight:900;
+  letter-spacing:2px;
+  text-align:center;
+}
+#splash .logo span{
+  display:block;
+  font-size:18px;
+  font-weight:500;
+  letter-spacing:4px;
+  color:#020617;
+  margin-top:4px;
+  opacity:0.8;
+}
+#splash.fadeOut{
+  animation:fadeOut 0.8s forwards;
+}
+@keyframes fadeOut{
+  to{opacity:0; visibility:hidden;}
+}
+
+/* Container */
 .container{
   padding:18px;
   animation:fade .4s ease;
@@ -57,9 +94,7 @@ button{
   transition:.15s;
 }
 button:active{ transform:scale(.96); }
-.back{
-  background:#94a3b8 !important;
-}
+.back{ background:#94a3b8 !important; }
 h2{
   text-align:center;
   margin:10px 0 20px;
@@ -74,10 +109,37 @@ li{
   margin:10px 0;
   box-shadow: inset 0 0 0 1px #1e293b;
 }
+
+/* Search */
+.search-box{
+  width:100%;
+  max-width:360px;
+  margin:0 auto 16px;
+}
+.search-box input{
+  width:100%;
+  padding:14px 16px;
+  border-radius:14px;
+  border:none;
+  outline:none;
+  font-size:16px;
+  background:#020617;
+  color:#e5e7eb;
+  border:1px solid #1e293b;
+}
+.search-box input::placeholder{
+  color:#94a3b8;
+}
+
 </style>
 </head>
 
 <body>
+
+<!-- Splash -->
+<div id="splash">
+  <div class="logo">AYT<span>EDEBİYAT</span></div>
+</div>
 
 <header>AYT Edebiyat</header>
 <div class="container" id="app"></div>
@@ -85,6 +147,31 @@ li{
 <script>
 const app = document.getElementById("app");
 let stack = [];
+let allData = {
+  "Geçiş Dönemi":{
+    "Yusuf Has Hacip":["Kutadgu Bilig"],
+    "Kaşgarlı Mahmut":["Divânü Lügâti’t-Türk"],
+    "Edip Ahmet Yüknekî":["Atabetü’l-Hakâyık"],
+    "Hoca Ahmet Yesevî":["Divân-ı Hikmet"]
+  },
+  "Divan Edebiyatı":{
+    "Fuzûlî":["Leyla vü Mecnun","Beng ü Bade","Sakinâme","Rind ü Zahid","Şikâyetnâme"],
+    "Nâbî":["Hayriyye","Hayrâbâd","Surnâme"],
+    "Şeyh Galip":["Hüsn ü Aşk"],
+    "Ali Şir Nevâî":["Muhakemetü’l Lügateyn","Mecalisü’n Nefais"]
+  },
+  "Tanzimat Dönemi":{
+    "Namık Kemal":["İntibah","Cezmi","Vatan Yahut Silistre","Gülnihal","Lisân-ı Osmânî"],
+    "Ahmet Mithat Efendi":["Hüseyin Fellâh","Esrâr-ı Cinâyât","Esâret","Letâif-i Rivayat","Felâtun Bey ile Râkım Efendi"],
+    "Şinasi":["Tercüman-ı Ahvâl","Tasvir-i Efkâr","Tercüme-i Manzume"]
+  }
+};
+
+// Açılış ekranı
+setTimeout(()=>{
+  document.getElementById("splash").classList.add("fadeOut");
+  ana();
+},1200);
 
 function render(html){
   app.innerHTML = html;
@@ -96,12 +183,15 @@ function go(view){
 }
 
 function back(){
-  render(stack.pop());
+  if(stack.length) render(stack.pop());
 }
 
 function ana(){
   stack=[];
   render(`
+    <div class="search-box">
+      <input id="search" placeholder="Dönem, yazar veya eser ara..." oninput="ara()">
+    </div>
     <div class="card"><button onclick="gecis()">Geçiş Dönemi</button></div>
     <div class="card"><button onclick="divan()">Divan Edebiyatı</button></div>
     <div class="card"><button onclick="tanzimat()">Tanzimat Dönemi</button></div>
@@ -109,38 +199,28 @@ function ana(){
 }
 
 function gecis(){
-  go(`
-    <h2>Geçiş Dönemi</h2>
-    <div class="card"><button onclick="eser('Yusuf Has Hacip',['Kutadgu Bilig'])">Yusuf Has Hacip</button></div>
-    <div class="card"><button onclick="eser('Kaşgarlı Mahmut',['Divânü Lügâti’t-Türk'])">Kaşgarlı Mahmut</button></div>
-    <div class="card"><button onclick="eser('Edip Ahmet Yüknekî',['Atabetü’l-Hakâyık'])">Edip Ahmet Yüknekî</button></div>
-    <div class="card"><button onclick="eser('Hoca Ahmet Yesevî',['Divân-ı Hikmet'])">Hoca Ahmet Yesevî</button></div>
-    <div class="card"><button class="back" onclick="back()">⬅ Geri</button></div>
-  `);
+  go(renderYazar("Geçiş Dönemi"));
 }
 
 function divan(){
-  go(`
-    <h2>Divan Edebiyatı</h2>
-    <div class="card"><button onclick="eser('Fuzûlî',['Leyla vü Mecnun','Beng ü Bade','Sakinâme','Rind ü Zahid','Şikâyetnâme'])">Fuzûlî</button></div>
-    <div class="card"><button onclick="eser('Nâbî',['Hayriyye','Hayrâbâd','Surnâme'])">Nâbî</button></div>
-    <div class="card"><button onclick="eser('Şeyh Galip',['Hüsn ü Aşk'])">Şeyh Galip</button></div>
-    <div class="card"><button onclick="eser('Ali Şir Nevâî',['Muhakemetü’l Lügateyn','Mecalisü’n Nefais'])">Ali Şir Nevâî</button></div>
-    <div class="card"><button class="back" onclick="back()">⬅ Geri</button></div>
-  `);
+  go(renderYazar("Divan Edebiyatı"));
 }
 
 function tanzimat(){
-  go(`
-    <h2>Tanzimat Dönemi</h2>
-    <div class="card"><button onclick="eser('Namık Kemal',['İntibah','Cezmi','Vatan Yahut Silistre','Gülnihal','Lisân-ı Osmânî'])">Namık Kemal</button></div>
-    <div class="card"><button onclick="eser('Ahmet Mithat Efendi',['Hüseyin Fellâh','Esrâr-ı Cinâyât','Esâret','Letâif-i Rivayat','Felâtun Bey ile Râkım Efendi'])">Ahmet Mithat Efendi</button></div>
-    <div class="card"><button onclick="eser('Şinasi',['Tercüman-ı Ahvâl','Tasvir-i Efkâr','Tercüme-i Manzume'])">Şinasi</button></div>
-    <div class="card"><button class="back" onclick="back()">⬅ Geri</button></div>
-  `);
+  go(renderYazar("Tanzimat Dönemi"));
 }
 
-function eser(yazar, liste){
+function renderYazar(donem){
+  let html = `<h2>${donem}</h2>`;
+  Object.keys(allData[donem]).forEach(yazar=>{
+    html+=`<div class="card"><button onclick="eser('${yazar}','${donem}')">${yazar}</button></div>`;
+  });
+  html+=`<div class="card"><button class="back" onclick="back()">⬅ Geri</button></div>`;
+  return html;
+}
+
+function eser(yazar, donem){
+  let liste = allData[donem][yazar];
   let li = liste.map(e=>`<li>${e}</li>`).join("");
   go(`
     <h2>${yazar}</h2>
@@ -149,7 +229,25 @@ function eser(yazar, liste){
   `);
 }
 
-ana();
+// Arama fonksiyonu
+function ara(){
+  let val = document.getElementById("search").value.toLowerCase();
+  let html = "";
+  Object.keys(allData).forEach(donem=>{
+    Object.keys(allData[donem]).forEach(yazar=>{
+      if(yazar.toLowerCase().includes(val)){
+        html+=`<div class="card"><button onclick="eser('${yazar}','${donem}')">${yazar}</button></div>`;
+      }
+      allData[donem][yazar].forEach(eser=>{
+        if(eser.toLowerCase().includes(val)){
+          html+=`<div class="card"><button onclick="eser('${yazar}','${donem}')">${eser}</button></div>`;
+        }
+      });
+    });
+  });
+  if(val=="") ana();
+  else render(html);
+}
 </script>
 
 </body>
