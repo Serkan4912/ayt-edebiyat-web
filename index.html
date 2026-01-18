@@ -1,92 +1,126 @@
 <!DOCTYPE html>
 <html lang="tr">
 <head>
-  <meta charset="UTF-8">
-  <title>AYT Edebiyat</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8">
+<title>AYT Edebiyat</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <style>
-    body {
-      margin: 0;
-      font-family: Arial, Helvetica, sans-serif;
-      background: linear-gradient(135deg, #1e3a8a, #2563eb);
-      color: white;
-      text-align: center;
-    }
-
-    header {
-      padding: 25px;
-      font-size: 28px;
-      font-weight: bold;
-    }
-
-    .container {
-      padding: 20px;
-    }
-
-    button {
-      width: 90%;
-      max-width: 400px;
-      padding: 15px;
-      margin: 10px 0;
-      font-size: 18px;
-      border: none;
-      border-radius: 12px;
-      background-color: #ffffff;
-      color: #1e3a8a;
-      font-weight: bold;
-    }
-
-    button:active {
-      transform: scale(0.97);
-    }
-
-    .back {
-      background-color: #93c5fd;
-    }
-  </style>
+<style>
+body{
+  margin:0;
+  font-family: "Segoe UI", Arial, sans-serif;
+  background:#0f172a;
+  color:#f8fafc;
+}
+header{
+  background:#1e293b;
+  padding:20px;
+  font-size:26px;
+  font-weight:700;
+  text-align:center;
+  letter-spacing:1px;
+}
+.container{
+  padding:20px;
+}
+.card{
+  background:#1e293b;
+  margin:12px auto;
+  padding:16px;
+  border-radius:14px;
+  max-width:500px;
+  font-size:18px;
+}
+.card button{
+  width:100%;
+  background:#38bdf8;
+  color:#0f172a;
+  border:none;
+  padding:14px;
+  font-size:17px;
+  border-radius:12px;
+  font-weight:600;
+}
+.card button:active{
+  transform:scale(0.97);
+}
+.back{
+  background:#94a3b8 !important;
+  margin-top:20px;
+}
+h2{
+  margin-bottom:10px;
+}
+ul{
+  list-style:none;
+  padding:0;
+}
+li{
+  background:#020617;
+  margin:8px 0;
+  padding:10px;
+  border-radius:8px;
+}
+</style>
 </head>
 
 <body>
 
 <header>AYT Edebiyat</header>
-
 <div class="container" id="app"></div>
 
 <script>
 const app = document.getElementById("app");
 
-function anaSayfa() {
+function anaSayfa(){
   app.innerHTML = `
-    <button onclick="donemler()">Edebî Dönemler</button>
+    <div class="card"><button onclick="gecis()">Geçiş Dönemi</button></div>
+    <div class="card"><button onclick="divan()">Divan Edebiyatı</button></div>
+    <div class="card"><button onclick="tanzimat()">Tanzimat Dönemi</button></div>
   `;
 }
 
-function donemler() {
+function gecis(){
   app.innerHTML = `
-    <button onclick="sanatcilar()">Tanzimat Dönemi</button>
-    <button class="back" onclick="anaSayfa()">⬅ Geri</button>
+    <h2>Geçiş Dönemi</h2>
+    <div class="card"><button onclick="eser('Yusuf Has Hacip',['Kutadgu Bilig'])">Yusuf Has Hacip</button></div>
+    <div class="card"><button onclick="eser('Kaşgarlı Mahmut',['Divânü Lügati\'t-Türk'])">Kaşgarlı Mahmut</button></div>
+    <div class="card"><button onclick="eser('Edip Ahmet Yüknekî',['Atabetü\'l-Hakâyık'])">Edip Ahmet Yüknekî</button></div>
+    <div class="card"><button onclick="eser('Hoca Ahmet Yesevî',['Divân-ı Hikmet'])">Hoca Ahmet Yesevî</button></div>
+    <button class="card back" onclick="anaSayfa()">⬅ Geri</button>
   `;
 }
 
-function sanatcilar() {
+function divan(){
   app.innerHTML = `
-    <button onclick="eserler()">Namık Kemal</button>
-    <button class="back" onclick="donemler()">⬅ Geri</button>
+    <h2>Divan Edebiyatı</h2>
+    <div class="card"><button onclick="eser('Fuzûlî',['Leyla vü Mecnun','Beng ü Bade','Şikâyetnâme'])">Fuzûlî</button></div>
+    <div class="card"><button onclick="eser('Nâbî',['Hayriyye','Hayrâbâd','Surnâme'])">Nâbî</button></div>
+    <div class="card"><button onclick="eser('Şeyh Galip',['Hüsn ü Aşk'])">Şeyh Galip</button></div>
+    <div class="card"><button onclick="eser('Ali Şir Nevâî',['Muhakemetü\'l Lügateyn','Mecalisü\'n Nefais'])">Ali Şir Nevâî</button></div>
+    <button class="card back" onclick="anaSayfa()">⬅ Geri</button>
   `;
 }
 
-function eserler() {
+function tanzimat(){
   app.innerHTML = `
-    <p><b>Vatan Yahut Silistre</b></p>
-    <p><b>İntibah</b></p>
-    <p><b>Cezmi</b></p>
-    <button class="back" onclick="sanatcilar()">⬅ Geri</button>
+    <h2>Tanzimat Dönemi</h2>
+    <div class="card"><button onclick="eser('Namık Kemal',['İntibah','Cezmi','Vatan Yahut Silistre'])">Namık Kemal</button></div>
+    <div class="card"><button onclick="eser('Ahmet Mithat Efendi',['Felâtun Bey ile Râkım Efendi','Letâif-i Rivayat'])">Ahmet Mithat Efendi</button></div>
+    <div class="card"><button onclick="eser('Recaizade Mahmut Ekrem',['Araba Sevdası'])">Recaizade Mahmut Ekrem</button></div>
+    <button class="card back" onclick="anaSayfa()">⬅ Geri</button>
   `;
+}
+
+function eser(yazar, liste){
+  let html = `<h2>${yazar}</h2><ul>`;
+  liste.forEach(e => html += `<li>${e}</li>`);
+  html += `</ul><button class="card back" onclick="anaSayfa()">⬅ Ana Sayfa</button>`;
+  app.innerHTML = html;
 }
 
 anaSayfa();
 </script>
 
 </body>
-  </html>
+</html>
